@@ -1,12 +1,8 @@
 #!/bin/sh
 #
-# haldaemon	HAL daemon
+# polkitd	PolicyKit
 #
 # chkconfig:	345 95 05
-#
-# description:	This is a daemon for collecting and maintaing information \
-#               about hardware from several sources. \
-#               See http://www.freedesktop.org/software/hal
 #
 
 
