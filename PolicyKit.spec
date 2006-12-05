@@ -1,15 +1,14 @@
-# TODO:
-# - add init scripts
 %define	snap	20061203
 Summary:	A framework for defining policy for system-wide components
 Summary(pl):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
 Version:	0.1
-Release:	0.%{snap}.1
+Release:	0.%{snap}.2
 License:	GPL
 Group:		Libraries
 Source0:	%{name}-%{snap}.tar.gz
 # Source0-md5:	3eca471796753a36ee46495907d41525
+Source1:	%{name}.init
 URL:		http://webcvs.freedesktop.org/hal/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -19,6 +18,7 @@ BuildRequires:	gtk-doc
 BuildRequires:	libtool
 BuildRequires:	pam-devel >= 0.80
 BuildRequires:	xmlto
+Requires(post,preun):	/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -69,11 +69,23 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_var}/run/polkit-console
+install -d $RPM_BUILD_ROOT{%{_var}/run/polkit-console,/etc/rc.d/init.d}
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/PolicyKit
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+/sbin/chkconfig --add PolicyKit
+%service PolicyKit restart
+
+%preun
+if [ "$1" = "0" ]; then
+	%service -q PolicyKit stop
+	/sbin/chkconfig --del PolicyKit
+fi
+
+%
 %post	-p /sbin/ldconfig
 %postun	-p /sbin/ldconfig
 
@@ -89,6 +101,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/dbus-1/system.d/PolicyKit.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/pam.d/policy-kit
 %dir %{_var}/run/polkit-console
+%attr(754,root,root) /etc/rc.d/init.d/*
 
 %files devel
 %defattr(644,root,root,755)
