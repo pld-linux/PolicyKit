@@ -1,0 +1,78 @@
+#!/bin/sh
+#
+# haldaemon	HAL daemon
+#
+# chkconfig:	345 95 05
+#
+# description:	This is a daemon for collecting and maintaing information \
+#               about hardware from several sources. \
+#               See http://www.freedesktop.org/software/hal
+#
+
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+start() {
+	# First step: check for running messagebus service
+	if [ -f /var/lock/subsys/messagebus ]; then
+		# Check if the service is already running?
+		if [ ! -f /var/lock/subsys/PolicyKit ]; then
+		    msg_starting PolicyKit
+		    daemon polkitd
+		    RETVAL=$?
+		    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/PolicyKit
+		else
+		    msg_already_running PolicyKit
+		fi
+	else
+		msg_not_running messagebus
+	fi
+}
+
+stop() {
+	if [ -f /var/lock/subsys/PolicyKit ]; then
+		# Stop daemons.
+		msg_stopping PolicyKit
+		killproc polkitd
+		rm -f /var/lock/subsys/PolicyKit
+	else
+		msg_not_running PolicyKit
+	fi
+}
+
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  restart)
+	stop
+	start
+	;;
+  reload|force-reload)
+	if [ -f /var/lock/subsys/PolicyKit ]; then
+		msg_reloading PolicyKit
+		killproc polkitd -HUP
+		RETVAL=$?
+	else
+		msg_not_running PolicyKit
+		RETVAL=7
+	fi
+	;;
+  status)
+	status polkitd
+	RETVAL=$?
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
+	exit 3
+esac
+
+exit $RETVAL
+
+# This must be last line !
+# vi:syntax=sh
