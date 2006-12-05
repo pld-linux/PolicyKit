@@ -75,18 +75,17 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/PolicyKit
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-/sbin/chkconfig --add PolicyKit
-%service PolicyKit restart
-
 %preun
 if [ "$1" = "0" ]; then
 	%service -q PolicyKit stop
 	/sbin/chkconfig --del PolicyKit
 fi
 
-%
-%post	-p /sbin/ldconfig
+%post
+/sbin/ldconfig
+/sbin/chkconfig --add PolicyKit
+%service PolicyKit restart
+
 %postun	-p /sbin/ldconfig
 
 %files
