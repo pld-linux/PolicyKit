@@ -3,12 +3,13 @@ Summary:	A framework for defining policy for system-wide components
 Summary(pl):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
 Version:	0.1
-Release:	0.%{snap}.3
+Release:	0.%{snap}.4
 License:	GPL
 Group:		Libraries
 Source0:	%{name}-%{snap}.tar.gz
 # Source0-md5:	3eca471796753a36ee46495907d41525
 Source1:	%{name}.init
+Patch0:		%{name}-conf.patch
 URL:		http://webcvs.freedesktop.org/hal/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -56,6 +57,7 @@ Statyczne biblioteki PolicyKit.
 
 %prep
 %setup -q -n %{name}
+%patch0 -p1
 
 %build
 ./autogen.sh
