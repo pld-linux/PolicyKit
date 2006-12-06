@@ -3,6 +3,7 @@
 # polkitd	PolicyKit
 #
 # chkconfig:	345 95 05
+# description:	PolicyKit
 #
 
 
