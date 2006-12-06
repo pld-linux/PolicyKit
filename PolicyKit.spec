@@ -1,3 +1,6 @@
+# TODO:
+# - polkit user/group
+# - separate -libs not to require daemon for development
 %define	snap	20061203
 Summary:	A framework for defining policy for system-wide components
 Summary(pl):	Szkielet do definiowania polityki dla komponentów systemowych
@@ -11,15 +14,20 @@ Source0:	%{name}-%{snap}.tar.gz
 Source1:	%{name}.init
 Patch0:		%{name}-conf.patch
 URL:		http://webcvs.freedesktop.org/hal/
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake
 BuildRequires:	dbus-devel >= 0.60
-BuildRequires:	glib2-devel
-BuildRequires:	gtk-doc
+BuildRequires:	glib2-devel >= 1:2.6.0
+BuildRequires:	gtk-doc >= 1.3
 BuildRequires:	libtool
 BuildRequires:	pam-devel >= 0.80
+BuildRequires:	pkgconfig
+BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	xmlto
 Requires(post,preun):	/sbin/chkconfig
+Requires:	dbus-libs >= 0.60
+Requires:	glib2 >= 1:2.6.0
+Requires:	rc-scripts
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -62,6 +70,7 @@ Statyczne biblioteki PolicyKit.
 %build
 ./autogen.sh
 %configure \
+	--with-html-dir=%{_gtkdocdir} \
 	--with-pam-module-dir=/%{_lib}/security
 %{__make}
 
@@ -73,6 +82,8 @@ rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT{%{_var}/run/polkit-console,/etc/rc.d/init.d}
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/PolicyKit
+
+rm -f $RPM_BUILD_ROOT/%{_lib}/security/*.{la,a}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -110,6 +121,7 @@ fi
 %{_libdir}/libpol*.la
 %{_includedir}/libpolkit
 %{_pkgconfigdir}/*.pc
+%{_gtkdocdir}/polkit
 
 %files static
 %defattr(644,root,root,755)
