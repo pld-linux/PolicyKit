@@ -6,7 +6,7 @@ Summary:	A framework for defining policy for system-wide components
 Summary(pl):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
 Version:	0.1
-Release:	0.%{snap}.4
+Release:	0.%{snap}.5
 License:	GPL
 Group:		Libraries
 Source0:	%{name}-%{snap}.tar.gz
