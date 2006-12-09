@@ -1,11 +1,11 @@
 # TODO:
-# - polkit user/group
+# - polkit user/group (in the future, as they are not used for anything now)
 %define	snap	20061203
 Summary:	A framework for defining policy for system-wide components
 Summary(pl):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
-Version:	0.1
-Release:	0.%{snap}.6
+Version:	0.2
+Release:	0.%{snap}.1
 License:	GPL v2
 Group:		Libraries
 Source0:	%{name}-%{snap}.tar.gz
