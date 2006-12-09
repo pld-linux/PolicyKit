@@ -1,12 +1,11 @@
 # TODO:
 # - polkit user/group
-# - separate -libs not to require daemon for development
 %define	snap	20061203
 Summary:	A framework for defining policy for system-wide components
 Summary(pl):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
 Version:	0.1
-Release:	0.%{snap}.5
+Release:	0.%{snap}.6
 License:	GPL
 Group:		Libraries
 Source0:	%{name}-%{snap}.tar.gz
@@ -25,6 +24,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	xmlto
 Requires(post,preun):	/sbin/chkconfig
+Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dbus-libs >= 0.60
 Requires:	glib2 >= 1:2.6.0
 Requires:	rc-scripts
@@ -39,11 +39,23 @@ PolicyKit to szkielet do definiowania polityki dla komponentów
 systemowych oraz sk³adników pulpitu do konfigurowania ich. Jest
 u¿ywany przez HAL-a.
 
+%package libs
+Summary:	PolicyKit libraries
+Summary(pl):	Biblioteki PolicyKit
+Group:		Libraries
+Conflicts:	PolicyKit < 0.1-0.20061203.6
+
+%description libs
+PolicyKit libraries.
+
+%description libs -l pl
+Biblioteki PolicyKit.
+
 %package devel
 Summary:	Header files for PolicyKit
 Summary(pl):	Pliki nag³ówkowe PolicyKit
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 Header files for PolicyKit.
@@ -68,7 +80,11 @@ Statyczne biblioteki PolicyKit.
 %patch0 -p1
 
 %build
-./autogen.sh
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__autoheader}
+%{__automake}
 %configure \
 	--with-html-dir=%{_gtkdocdir} \
 	--with-pam-module-dir=/%{_lib}/security
@@ -88,26 +104,24 @@ rm -f $RPM_BUILD_ROOT/%{_lib}/security/*.{la,a}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+/sbin/chkconfig --add PolicyKit
+%service PolicyKit restart
+
 %preun
 if [ "$1" = "0" ]; then
 	%service -q PolicyKit stop
 	/sbin/chkconfig --del PolicyKit
 fi
 
-%post
-/sbin/ldconfig
-/sbin/chkconfig --add PolicyKit
-%service PolicyKit restart
-
-%postun	-p /sbin/ldconfig
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS README doc/spec/*.{html,png,dia} doc/TODO
 %attr(755,root,root) %{_bindir}/polkit-*
 %attr(755,root,root) %{_sbindir}/polkitd
-%attr(755,root,root) %{_libdir}/libpolkit-grant.so.*.*.*
-%attr(755,root,root) %{_libdir}/libpolkit.so.*.*.*
 %attr(755,root,root) /%{_lib}/security/pam_polkit_console.so*
 %{_sysconfdir}/PolicyKit
 %{_sysconfdir}/dbus-1/system.d/PolicyKit.conf
@@ -115,14 +129,19 @@ fi
 %dir %{_var}/run/polkit-console
 %attr(754,root,root) /etc/rc.d/init.d/*
 
+%files libs
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libpolkit-grant.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpolkit.so.*.*.*
+
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libpol*.so
-%{_libdir}/libpol*.la
+%attr(755,root,root) %{_libdir}/libpolkit*.so
+%{_libdir}/libpolkit*.la
 %{_includedir}/libpolkit
-%{_pkgconfigdir}/*.pc
+%{_pkgconfigdir}/polkit.pc
 %{_gtkdocdir}/polkit
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/libpol*.a
+%{_libdir}/libpolkit*.a
