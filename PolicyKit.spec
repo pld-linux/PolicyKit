@@ -6,7 +6,7 @@ Summary(pl):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
 Version:	0.1
 Release:	0.%{snap}.6
-License:	GPL
+License:	GPL v2
 Group:		Libraries
 Source0:	%{name}-%{snap}.tar.gz
 # Source0-md5:	3eca471796753a36ee46495907d41525
@@ -42,6 +42,7 @@ u¿ywany przez HAL-a.
 %package libs
 Summary:	PolicyKit libraries
 Summary(pl):	Biblioteki PolicyKit
+License:	AFL v2.1 or GPL v2
 Group:		Libraries
 Conflicts:	PolicyKit < 0.1-0.20061203.6
 
@@ -54,6 +55,7 @@ Biblioteki PolicyKit.
 %package devel
 Summary:	Header files for PolicyKit
 Summary(pl):	Pliki nag³ówkowe PolicyKit
+License:	AFL v2.1 or GPL v2
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 
@@ -66,6 +68,7 @@ Pliki nag³ówkowe PolicyKit.
 %package static
 Summary:	Static PolicyKit libraries
 Summary(pl):	Statyczne biblioteki PolicyKit
+License:	AFL v2.1 or GPL v2
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
@@ -131,6 +134,7 @@ fi
 
 %files libs
 %defattr(644,root,root,755)
+%doc COPYING
 %attr(755,root,root) %{_libdir}/libpolkit-grant.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpolkit.so.*.*.*
 
