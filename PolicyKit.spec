@@ -2,7 +2,7 @@
 # - polkit user/group (in the future, as they are not used for anything now)
 %define	snap	20061203
 Summary:	A framework for defining policy for system-wide components
-Summary(pl):	Szkielet do definiowania polityki dla komponent體 systemowych
+Summary(pl.UTF-8):   Szkielet do definiowania polityki dla komponent贸w systemowych
 Name:		PolicyKit
 Version:	0.2
 Release:	0.%{snap}.1
@@ -34,14 +34,14 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 PolicyKit is a framework for defining policy for system-wide
 components and for desktop pieces to configure it. It is used by HAL.
 
-%description -l pl
-PolicyKit to szkielet do definiowania polityki dla komponent體
-systemowych oraz sk砤dnik體 pulpitu do konfigurowania ich. Jest
-u縴wany przez HAL-a.
+%description -l pl.UTF-8
+PolicyKit to szkielet do definiowania polityki dla komponent贸w
+systemowych oraz sk艂adnik贸w pulpitu do konfigurowania ich. Jest
+u偶ywany przez HAL-a.
 
 %package libs
 Summary:	PolicyKit libraries
-Summary(pl):	Biblioteki PolicyKit
+Summary(pl.UTF-8):   Biblioteki PolicyKit
 License:	AFL v2.1 or GPL v2
 Group:		Libraries
 Conflicts:	PolicyKit < 0.1-0.20061203.6
@@ -49,12 +49,12 @@ Conflicts:	PolicyKit < 0.1-0.20061203.6
 %description libs
 PolicyKit libraries.
 
-%description libs -l pl
+%description libs -l pl.UTF-8
 Biblioteki PolicyKit.
 
 %package devel
 Summary:	Header files for PolicyKit
-Summary(pl):	Pliki nag丑wkowe PolicyKit
+Summary(pl.UTF-8):   Pliki nag艂贸wkowe PolicyKit
 License:	AFL v2.1 or GPL v2
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
@@ -62,12 +62,12 @@ Requires:	%{name}-libs = %{version}-%{release}
 %description devel
 Header files for PolicyKit.
 
-%description devel -l pl
-Pliki nag丑wkowe PolicyKit.
+%description devel -l pl.UTF-8
+Pliki nag艂贸wkowe PolicyKit.
 
 %package static
 Summary:	Static PolicyKit libraries
-Summary(pl):	Statyczne biblioteki PolicyKit
+Summary(pl.UTF-8):   Statyczne biblioteki PolicyKit
 License:	AFL v2.1 or GPL v2
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
@@ -75,7 +75,7 @@ Requires:	%{name}-devel = %{version}-%{release}
 %description static
 Static PolicyKit libraries.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Statyczne biblioteki PolicyKit.
 
 %prep
