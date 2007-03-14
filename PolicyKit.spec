@@ -1,6 +1,6 @@
 # TODO:
 # - polkit user/group (in the future, as they are not used for anything now)
-%define	snap	20061203
+%define	snap	20070314
 Summary:	A framework for defining policy for system-wide components
 Summary(pl.UTF-8):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
@@ -9,7 +9,7 @@ Release:	0.%{snap}.2
 License:	GPL v2
 Group:		Libraries
 Source0:	%{name}-%{snap}.tar.gz
-# Source0-md5:	3eca471796753a36ee46495907d41525
+# Source0-md5:	6ffed84618d1e57abdcb486dfe21f091
 Source1:	%{name}.init
 Patch0:		%{name}-conf.patch
 URL:		http://webcvs.freedesktop.org/hal/
@@ -79,7 +79,7 @@ Static PolicyKit libraries.
 Statyczne biblioteki PolicyKit.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n %{name}-%{snap}
 %patch0 -p1
 
 %build
