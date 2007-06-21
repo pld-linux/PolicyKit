@@ -1,18 +1,16 @@
 # TODO:
 # - polkit user/group (in the future, as they are not used for anything now)
-%define	snap	20070314
 Summary:	A framework for defining policy for system-wide components
 Summary(pl.UTF-8):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
-Version:	0.2
-Release:	0.%{snap}.2
+Version:	0.3
+Release:	1
 License:	GPL v2
 Group:		Libraries
-Source0:	%{name}-%{snap}.tar.gz
-# Source0-md5:	6ffed84618d1e57abdcb486dfe21f091
+Source0:	http://people.freedesktop.org/~david/dist/%{name}-%{version}.tar.gz
+# Source0-md5:	8d61312abb40227a8487433872063ccf
 Source1:	%{name}.init
-Patch0:		%{name}-conf.patch
-URL:		http://webcvs.freedesktop.org/hal/
+URL:		http://people.freedesktop.org/~david/polkit-spec.html
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake
 BuildRequires:	dbus-devel >= 0.60
@@ -38,6 +36,18 @@ components and for desktop pieces to configure it. It is used by HAL.
 PolicyKit to szkielet do definiowania polityki dla komponentów
 systemowych oraz składników pulpitu do konfigurowania ich. Jest
 używany przez HAL-a.
+
+%package apidocs
+Summary:	PolicyKit API documentation
+Summary(pl.UTF-8):	Dokumentacja API PolicyKit
+Group:		Documentation
+Requires:	gtk-doc-common
+
+%description apidocs
+PolicyKit API documentation.
+
+%description apidocs -l pl.UTF-8
+Dokumentacja API PolicyKit.
 
 %package libs
 Summary:	PolicyKit libraries
@@ -79,8 +89,7 @@ Static PolicyKit libraries.
 Statyczne biblioteki PolicyKit.
 
 %prep
-%setup -q -n %{name}-%{snap}
-%patch0 -p1
+%setup -q
 
 %build
 %{__libtoolize}
@@ -102,7 +111,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_var}/run/polkit-console,/etc/rc.d/init.d}
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/PolicyKit
 
-rm -f $RPM_BUILD_ROOT/%{_lib}/security/*.{la,a}
+rm -f $RPM_BUILD_ROOT/%{_libdir}/PolicyKit/modules/*.{la,a}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -122,28 +131,39 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS README doc/spec/*.{html,png,dia} doc/TODO
+%doc AUTHORS README doc/TODO
 %attr(755,root,root) %{_bindir}/polkit-*
-%attr(755,root,root) %{_sbindir}/polkitd
-%attr(755,root,root) /%{_lib}/security/pam_polkit_console.so*
+%{_sysconfdir}/pam.d/polkit
 %{_sysconfdir}/PolicyKit
-%{_sysconfdir}/dbus-1/system.d/PolicyKit.conf
-%config(noreplace) %verify(not md5 mtime size) /etc/pam.d/policy-kit
 %dir %{_var}/run/polkit-console
 %attr(754,root,root) /etc/rc.d/init.d/*
+%{_mandir}/man1/*
+%{_mandir}/man8/*
+%dir %{_libdir}/PolicyKit
+%dir %{_libdir}/PolicyKit/modules
+%attr(755,root,root) %{_libdir}/PolicyKit/modules/polkit*.so
+%attr(755,root,root) %{_libdir}/polkit-grant-helper
+
+%files apidocs
+%defattr(644,root,root,755)
+%{_gtkdocdir}/polkit
+%{_gtkdocdir}/polkit-dbus
+%{_gtkdocdir}/polkit-grant
 
 %files libs
 %defattr(644,root,root,755)
-%doc COPYING
 %attr(755,root,root) %{_libdir}/libpolkit-grant.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpolkit.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpolkit-dbus.so.*.*.*
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libpolkit*.so
+%{_includedir}/PolicyKit
 %{_libdir}/libpolkit*.la
-%{_includedir}/libpolkit
 %{_pkgconfigdir}/polkit.pc
+%{_pkgconfigdir}/polkit-dbus.pc
+%{_pkgconfigdir}/polkit-grant.pc
 %{_gtkdocdir}/polkit
 
 %files static
