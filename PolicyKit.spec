@@ -9,7 +9,6 @@ License:	GPL v2
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~david/dist/%{name}-%{version}.tar.gz
 # Source0-md5:	8d61312abb40227a8487433872063ccf
-Source1:	%{name}.init
 URL:		http://people.freedesktop.org/~david/polkit-spec.html
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake
@@ -108,23 +107,10 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT{%{_var}/run/polkit-console,/etc/rc.d/init.d}
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/PolicyKit
-
 rm -f $RPM_BUILD_ROOT/%{_libdir}/PolicyKit/modules/*.{la,a}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
-%post
-/sbin/chkconfig --add PolicyKit
-%service PolicyKit restart
-
-%preun
-if [ "$1" = "0" ]; then
-	%service -q PolicyKit stop
-	/sbin/chkconfig --del PolicyKit
-fi
 
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
@@ -135,8 +121,6 @@ fi
 %attr(755,root,root) %{_bindir}/polkit-*
 %{_sysconfdir}/pam.d/polkit
 %{_sysconfdir}/PolicyKit
-%dir %{_var}/run/polkit-console
-%attr(754,root,root) /etc/rc.d/init.d/*
 %{_mandir}/man1/*
 %{_mandir}/man8/*
 %dir %{_libdir}/PolicyKit
