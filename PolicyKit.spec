@@ -13,7 +13,7 @@ URL:		http://people.freedesktop.org/~david/polkit-spec.html
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake
 BuildRequires:	dbus-devel >= 1.0
-BuildRequires:	expat-devel >= 1.95.8
+BuildRequires:	expat-devel >= 1:1.95.8
 BuildRequires:	glib2-devel >= 1:2.6.0
 BuildRequires:	gtk-doc >= 1.3
 BuildRequires:	libtool
@@ -21,11 +21,8 @@ BuildRequires:	pam-devel >= 0.80
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	xmlto
-Requires(post,preun):	/sbin/chkconfig
+Requires(triggerpostun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	dbus-libs >= 0.60
-Requires:	glib2 >= 1:2.6.0
-Requires:	rc-scripts
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -54,6 +51,8 @@ Summary:	PolicyKit libraries
 Summary(pl.UTF-8):	Biblioteki PolicyKit
 License:	AFL v2.1 or GPL v2
 Group:		Libraries
+Requires:	dbus-libs >= 1.0
+Requires:	glib2 >= 1:2.6.0
 Conflicts:	PolicyKit < 0.1-0.20061203.6
 
 %description libs
@@ -68,6 +67,10 @@ Summary(pl.UTF-8):	Pliki nagłówkowe PolicyKit
 License:	AFL v2.1 or GPL v2
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	expat-devel >= 1:1.95.8
+Requires:	glib2-devel >= 1:2.6.0
+# libpolkit-dbus and libpolkit-grant
+#Requires:	dbus-devel >= 1.0
 
 %description devel
 Header files for PolicyKit.
