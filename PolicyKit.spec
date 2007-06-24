@@ -99,12 +99,12 @@ Statyczne biblioteki PolicyKit.
 %configure \
 	--with-html-dir=%{_gtkdocdir} \
 	--with-pam-module-dir=/%{_lib}/security
-%{__make}
+%{__make} -j1
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
+%{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT/%{_libdir}/PolicyKit/modules/*.{la,a}
