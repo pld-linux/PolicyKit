@@ -1,5 +1,5 @@
 # TODO:
-# - polkit user/group (in the future, as they are not used for anything now)
+# - polkit user/group
 Summary:	A framework for defining policy for system-wide components
 Summary(pl.UTF-8):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
@@ -10,9 +10,10 @@ Group:		Libraries
 Source0:	http://people.freedesktop.org/~david/dist/%{name}-%{version}.tar.gz
 # Source0-md5:	8d61312abb40227a8487433872063ccf
 URL:		http://people.freedesktop.org/~david/polkit-spec.html
-BuildRequires:	autoconf >= 2.57
+BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake
-BuildRequires:	dbus-devel >= 0.60
+BuildRequires:	dbus-devel >= 1.0
+BuildRequires:	expat-devel >= 1.95.8
 BuildRequires:	glib2-devel >= 1:2.6.0
 BuildRequires:	gtk-doc >= 1.3
 BuildRequires:	libtool
@@ -107,10 +108,14 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-rm -f $RPM_BUILD_ROOT/%{_libdir}/PolicyKit/modules/*.{la,a}
+rm -f $RPM_BUILD_ROOT%{_libdir}/PolicyKit/modules/*.{la,a}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%triggerpostun	-- PolicyKit < 0.3
+%service -q PolicyKit stop
+/sbin/chkconfig --del PolicyKit
 
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
@@ -119,14 +124,17 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS README doc/TODO
 %attr(755,root,root) %{_bindir}/polkit-*
-%{_sysconfdir}/pam.d/polkit
-%{_sysconfdir}/PolicyKit
-%{_mandir}/man1/*
-%{_mandir}/man8/*
 %dir %{_libdir}/PolicyKit
 %dir %{_libdir}/PolicyKit/modules
 %attr(755,root,root) %{_libdir}/PolicyKit/modules/polkit*.so
+#%attr(2755,root,polkit) %{_libdir}/polkit-grant-helper
 %attr(755,root,root) %{_libdir}/polkit-grant-helper
+%{_sysconfdir}/PolicyKit
+/etc/pam.d/polkit
+#%attr(775,polkit,polkit) /var/lib/PolicyKit
+#%attr(775,polkit,polkit) /var/run/PolicyKit
+%{_mandir}/man1/*
+%{_mandir}/man8/*
 
 %files apidocs
 %defattr(644,root,root,755)
@@ -136,15 +144,21 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libpolkit-grant.so.*.*.*
+# notes which license applies to which package part, AFL text (and GPL text copy)
+%doc COPYING
 %attr(755,root,root) %{_libdir}/libpolkit.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpolkit-dbus.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpolkit-grant.so.*.*.*
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libpolkit*.so
+%attr(755,root,root) %{_libdir}/libpolkit.so
+%attr(755,root,root) %{_libdir}/libpolkit-dbus.so
+%attr(755,root,root) %{_libdir}/libpolkit-grant.so
+%{_libdir}/libpolkit.la
+%{_libdir}/libpolkit-dbus.la
+%{_libdir}/libpolkit-grant.la
 %{_includedir}/PolicyKit
-%{_libdir}/libpolkit*.la
 %{_pkgconfigdir}/polkit.pc
 %{_pkgconfigdir}/polkit-dbus.pc
 %{_pkgconfigdir}/polkit-grant.pc
@@ -152,4 +166,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/libpolkit*.a
+%{_libdir}/libpolkit.a
+%{_libdir}/libpolkit-dbus.a
+%{_libdir}/libpolkit-grant.a
