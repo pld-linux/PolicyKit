@@ -9,7 +9,7 @@ License:	GPL v2
 Group:		Libraries
 #Source0:	http://people.freedesktop.org/~david/dist/%{name}-%{version}-%{_snap}.tar.bz2
 Source0:	%{name}-%{version}-%{_snap}.tar.bz2
-# Source0-md5:	8d61312abb40227a8487433872063ccf
+# Source0-md5:	858e47d520f38eaaed96e40a8ed6f45a
 URL:		http://people.freedesktop.org/~david/polkit-spec.html
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake
