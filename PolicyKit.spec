@@ -1,13 +1,13 @@
-# TODO:
-# - polkit user/group
+
+%define		_snap	20070805
 Summary:	A framework for defining policy for system-wide components
 Summary(pl.UTF-8):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
-Version:	0.3
-Release:	2
+Version:	0.5
+Release:	0.%{_snap}.1
 License:	GPL v2
 Group:		Libraries
-Source0:	http://people.freedesktop.org/~david/dist/%{name}-%{version}.tar.gz
+Source0:	http://people.freedesktop.org/~david/dist/%{name}-%{version}-%{_snap}.tar.bz2
 # Source0-md5:	8d61312abb40227a8487433872063ccf
 URL:		http://people.freedesktop.org/~david/polkit-spec.html
 BuildRequires:	autoconf >= 2.60
@@ -92,7 +92,7 @@ Static PolicyKit libraries.
 Statyczne biblioteki PolicyKit.
 
 %prep
-%setup -q
+%setup -q -n %{name}
 
 %build
 %{__libtoolize}
@@ -120,6 +120,14 @@ rm -rf $RPM_BUILD_ROOT
 %service -q PolicyKit stop
 /sbin/chkconfig --del PolicyKit
 
+%pre
+%groupadd -g 220 polkituser
+%useradd -u 220 -g polkituser polkituser
+
+%postun
+%userremove	polkituser
+%groupremove	polkituser
+
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
 
@@ -127,17 +135,15 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS README doc/TODO
 %attr(755,root,root) %{_bindir}/polkit-*
-%dir %{_libdir}/PolicyKit
-%dir %{_libdir}/PolicyKit/modules
-%attr(755,root,root) %{_libdir}/PolicyKit/modules/polkit*.so
+%{_datadir}/PolicyKit
 #%attr(2755,root,polkit) %{_libdir}/polkit-grant-helper
 %attr(755,root,root) %{_libdir}/polkit-grant-helper
+%attr(755,root,root) %{_libdir}/polkit-grant-helper-pam
 %{_sysconfdir}/PolicyKit
 /etc/pam.d/polkit
-#%attr(775,polkit,polkit) /var/lib/PolicyKit
-#%attr(775,polkit,polkit) /var/run/PolicyKit
-%{_mandir}/man1/*
-%{_mandir}/man8/*
+%attr(775,polkituser,polkituser) /var/lib/PolicyKit
+%attr(775,polkituser,polkituser) /var/run/PolicyKit
+%{_mandir}/man*/*
 
 %files apidocs
 %defattr(644,root,root,755)
