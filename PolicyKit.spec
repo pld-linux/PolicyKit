@@ -22,8 +22,18 @@ BuildRequires:	pam-devel >= 0.80
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	xmlto
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/lib/rpm/user_group.sh
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Requires(pre):	/usr/sbin/usermod
 Requires(triggerpostun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{version}-%{release}
+Provides:	group(polkituser)
+Provides:	user(polkituser)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -120,9 +130,19 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/PolicyKit/modules/*.{la,a}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%triggerpostun	-- PolicyKit < 0.3
+%triggerun	-- PolicyKit < 0.3
 %service -q PolicyKit stop
 /sbin/chkconfig --del PolicyKit
+
+%pre
+%groupadd -g 220 polkituser
+%useradd -u 220 -d %{_datadir}/empty -c "PolicyKit User" -g polkituser polkituser
+
+%postun
+if [ "$1" = "0" ]; then
+	%userremove polkituser
+	%groupremove polkituser
+fi
 
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
@@ -131,15 +151,15 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS README doc/TODO
 %attr(755,root,root) %{_bindir}/polkit-*
-#%attr(2755,root,polkituser) %{_libdir}/polkit-grant-helper
-%attr(755,root,root) %{_libdir}/polkit-grant-helper
-#%attr(4755,root,root) %{_libdir}/polkit-grant-helper-pam
-%attr(755,root,root) %{_libdir}/polkit-grant-helper-pam
+%attr(2755,root,polkituser) %{_libdir}/polkit-grant-helper
+#%attr(755,root,root) %{_libdir}/polkit-grant-helper
+%attr(4755,root,root) %{_libdir}/polkit-grant-helper-pam
+#%attr(755,root,root) %{_libdir}/polkit-grant-helper-pam
 %dir %{_sysconfdir}/PolicyKit
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/PolicyKit/PolicyKit.conf
 /etc/pam.d/polkit
-#%attr(775,polkituser,polkituser) /var/lib/PolicyKit
-#%attr(775,polkituser,polkituser) /var/run/PolicyKit
+%attr(775,polkituser,polkituser) /var/lib/PolicyKit
+%attr(775,polkituser,polkituser) /var/run/PolicyKit
 %{_mandir}/man1/polkit-config-file-validate.1*
 %{_mandir}/man1/polkit-grant.1*
 %{_mandir}/man1/polkit-list-actions.1*
