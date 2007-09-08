@@ -3,12 +3,12 @@
 Summary:	A framework for defining policy for system-wide components
 Summary(pl.UTF-8):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
-Version:	0.3
-Release:	2
+Version:	0.5
+Release:	1
 License:	GPL v2
 Group:		Libraries
-Source0:	http://people.freedesktop.org/~david/dist/%{name}-%{version}.tar.gz
-# Source0-md5:	8d61312abb40227a8487433872063ccf
+Source0:	http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
+# Source0-md5:	e5632c984df948edffb49659e76b6e96
 URL:		http://people.freedesktop.org/~david/polkit-spec.html
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake
@@ -127,23 +127,30 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS README doc/TODO
 %attr(755,root,root) %{_bindir}/polkit-*
-%dir %{_libdir}/PolicyKit
-%dir %{_libdir}/PolicyKit/modules
-%attr(755,root,root) %{_libdir}/PolicyKit/modules/polkit*.so
+#%dir %{_libdir}/PolicyKit
+#%dir %{_libdir}/PolicyKit/modules
+#%attr(755,root,root) %{_libdir}/PolicyKit/modules/polkit*.so
 #%attr(2755,root,polkit) %{_libdir}/polkit-grant-helper
 %attr(755,root,root) %{_libdir}/polkit-grant-helper
-%{_sysconfdir}/PolicyKit
+%attr(755,root,root) %{_libdir}/polkit-grant-helper-pam
+%dir %{_sysconfdir}/PolicyKit
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/PolicyKit/PolicyKit.conf
 /etc/pam.d/polkit
 #%attr(775,polkit,polkit) /var/lib/PolicyKit
 #%attr(775,polkit,polkit) /var/run/PolicyKit
-%{_mandir}/man1/*
-%{_mandir}/man8/*
+%{_mandir}/man1/polkit-config-file-validate.1*
+%{_mandir}/man1/polkit-grant.1*
+%{_mandir}/man1/polkit-list-actions.1*
+%{_mandir}/man1/polkit-policy-file-validate.1*
+%{_mandir}/man5/PolicyKit.conf.5*
+%{_mandir}/man8/PolicyKit.8*
+
 
 %files apidocs
 %defattr(644,root,root,755)
 %{_gtkdocdir}/polkit
-%{_gtkdocdir}/polkit-dbus
-%{_gtkdocdir}/polkit-grant
+#%{_gtkdocdir}/polkit-dbus
+#%{_gtkdocdir}/polkit-grant
 
 %files libs
 %defattr(644,root,root,755)
@@ -165,7 +172,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgconfigdir}/polkit.pc
 %{_pkgconfigdir}/polkit-dbus.pc
 %{_pkgconfigdir}/polkit-grant.pc
-%{_gtkdocdir}/polkit
 
 %files static
 %defattr(644,root,root,755)
