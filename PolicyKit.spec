@@ -146,6 +146,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/polkit-policy-file-validate.1*
 %{_mandir}/man5/PolicyKit.conf.5*
 %{_mandir}/man8/PolicyKit.8*
+%{_datadir}/PolicyKit
 
 %files apidocs
 %defattr(644,root,root,755)
