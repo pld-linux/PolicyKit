@@ -1,5 +1,5 @@
 # TODO:
-# - polkit user/group
+# - polkituser user/group
 Summary:	A framework for defining policy for system-wide components
 Summary(pl.UTF-8):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
@@ -11,11 +11,12 @@ Source0:	http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
 # Source0-md5:	e5632c984df948edffb49659e76b6e96
 URL:		http://people.freedesktop.org/~david/polkit-spec.html
 BuildRequires:	autoconf >= 2.60
-BuildRequires:	automake
+BuildRequires:	automake >= 1:1.7
 BuildRequires:	dbus-devel >= 1.0
 BuildRequires:	expat-devel >= 1:1.95.8
 BuildRequires:	glib2-devel >= 1:2.6.0
 BuildRequires:	gtk-doc >= 1.3
+BuildRequires:	libselinux-devel >= 1.30
 BuildRequires:	libtool
 BuildRequires:	pam-devel >= 0.80
 BuildRequires:	pkgconfig
@@ -69,8 +70,10 @@ Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	expat-devel >= 1:1.95.8
 Requires:	glib2-devel >= 1:2.6.0
-# libpolkit-dbus and libpolkit-grant
+# polkit-dbus and polkit-grant
 #Requires:	dbus-devel >= 1.0
+# polkit-dbus
+#Requires:	libselinux-devel >= 1.30
 
 %description devel
 Header files for PolicyKit.
@@ -102,6 +105,7 @@ Statyczne biblioteki PolicyKit.
 %{__automake}
 %configure \
 	--with-html-dir=%{_gtkdocdir} \
+	--with-pam-include=system-auth \
 	--with-pam-module-dir=/%{_lib}/security
 %{__make} -j1
 
@@ -127,17 +131,15 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS README doc/TODO
 %attr(755,root,root) %{_bindir}/polkit-*
-#%dir %{_libdir}/PolicyKit
-#%dir %{_libdir}/PolicyKit/modules
-#%attr(755,root,root) %{_libdir}/PolicyKit/modules/polkit*.so
-#%attr(2755,root,polkit) %{_libdir}/polkit-grant-helper
+#%attr(2755,root,polkituser) %{_libdir}/polkit-grant-helper
 %attr(755,root,root) %{_libdir}/polkit-grant-helper
+#%attr(4755,root,root) %{_libdir}/polkit-grant-helper-pam
 %attr(755,root,root) %{_libdir}/polkit-grant-helper-pam
 %dir %{_sysconfdir}/PolicyKit
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/PolicyKit/PolicyKit.conf
 /etc/pam.d/polkit
-#%attr(775,polkit,polkit) /var/lib/PolicyKit
-#%attr(775,polkit,polkit) /var/run/PolicyKit
+#%attr(775,polkituser,polkituser) /var/lib/PolicyKit
+#%attr(775,polkituser,polkituser) /var/run/PolicyKit
 %{_mandir}/man1/polkit-config-file-validate.1*
 %{_mandir}/man1/polkit-grant.1*
 %{_mandir}/man1/polkit-list-actions.1*
@@ -145,12 +147,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/PolicyKit.conf.5*
 %{_mandir}/man8/PolicyKit.8*
 
-
 %files apidocs
 %defattr(644,root,root,755)
 %{_gtkdocdir}/polkit
-#%{_gtkdocdir}/polkit-dbus
-#%{_gtkdocdir}/polkit-grant
 
 %files libs
 %defattr(644,root,root,755)
