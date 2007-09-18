@@ -30,6 +30,7 @@ Requires(pre):	/usr/sbin/useradd
 Requires(pre):	/usr/sbin/usermod
 Requires(triggerpostun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	ConsoleKit
 Provides:	group(polkituser)
 Provides:	user(polkituser)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
