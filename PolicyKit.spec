@@ -2,7 +2,7 @@ Summary:	A framework for defining policy for system-wide components
 Summary(pl.UTF-8):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
 Version:	0.6
-Release:	2
+Release:	3
 License:	GPL v2
 Group:		Libraries
 Source0:	http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
@@ -34,6 +34,8 @@ Requires:	ConsoleKit >= 0.2.1
 Provides:	group(polkituser)
 Provides:	user(polkituser)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_libexecdir	%{_libdir}/%{name}
 
 %description
 PolicyKit is a framework for defining policy for system-wide
@@ -150,8 +152,9 @@ fi
 %defattr(644,root,root,755)
 %doc AUTHORS README doc/TODO
 %attr(755,root,root) %{_bindir}/polkit-*
-%attr(2755,root,polkituser) %{_libdir}/polkit-grant-helper
-%attr(4750,root,polkituser) %{_libdir}/polkit-grant-helper-pam
+%dir %{_libexecdir}
+%attr(2755,root,polkituser) %{_libexecdir}/polkit-grant-helper
+%attr(4750,root,polkituser) %{_libexecdir}/polkit-grant-helper-pam
 %dir %{_sysconfdir}/PolicyKit
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/PolicyKit/PolicyKit.conf
 /etc/pam.d/polkit
