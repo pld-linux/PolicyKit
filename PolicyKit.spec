@@ -5,7 +5,7 @@ Summary(pl.UTF-8):	Szkielet do definiowania polityki dla komponentów systemowyc
 Name:		PolicyKit
 Version:	0.7
 Release:	1
-License:	GPL v2
+License:	MIT
 Group:		Libraries
 Source0:	http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
 # Source0-md5:	99e0cc588310656fa25f8f66a411c71f
