@@ -64,7 +64,6 @@ Dokumentacja API PolicyKit.
 %package libs
 Summary:	PolicyKit libraries
 Summary(pl.UTF-8):	Biblioteki PolicyKit
-License:	AFL v2.1 or GPL v2
 Group:		Libraries
 Requires:	dbus-libs >= 1.0
 Requires:	glib2 >= 1:2.6.0
@@ -79,7 +78,6 @@ Biblioteki PolicyKit.
 %package devel
 Summary:	Header files for PolicyKit
 Summary(pl.UTF-8):	Pliki nagłówkowe PolicyKit
-License:	AFL v2.1 or GPL v2
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	expat-devel >= 1:1.95.8
@@ -99,7 +97,6 @@ Pliki nagłówkowe PolicyKit.
 %package static
 Summary:	Static PolicyKit libraries
 Summary(pl.UTF-8):	Statyczne biblioteki PolicyKit
-License:	AFL v2.1 or GPL v2
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
