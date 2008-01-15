@@ -1,0 +1,12 @@
+--- src/polkit/polkit-policy-cache.c.orig	2007-12-10 21:40:46.000000000 +0000
++++ src/polkit/polkit-policy-cache.c	2007-12-10 22:47:22.000000000 +0000
+@@ -127,7 +127,7 @@
+                 char *filename;
+                 static const char suffix[] = ".policy";
+ 
+-                if (d->d_type != DT_REG)
++                if (d->d_type != DT_REG && d->d_type != DT_UNKNOWN)
+                         continue;
+ 
+                 filename = d->d_name;
+ 
