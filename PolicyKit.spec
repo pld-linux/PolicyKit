@@ -1,5 +1,4 @@
 # TODO: package bash-completion in proper way
-# nothing owns %{_datadir}/dbus-1/interfaces dir
 Summary:	A framework for defining policy for system-wide components
 Summary(pl.UTF-8):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
@@ -35,6 +34,7 @@ Requires(pre):	/usr/sbin/usermod
 Requires(triggerpostun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	ConsoleKit >= 0.2.1
+Requires:	dbus >= 1.1.2-5
 Provides:	group(polkituser)
 Provides:	user(polkituser)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
