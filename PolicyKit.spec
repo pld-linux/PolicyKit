@@ -3,12 +3,13 @@ Summary:	A framework for defining policy for system-wide components
 Summary(pl.UTF-8):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
 Version:	0.7
-Release:	2
+Release:	3
 License:	MIT
 Group:		Libraries
 Source0:	http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
 # Source0-md5:	99e0cc588310656fa25f8f66a411c71f
 Patch0:		%{name}-xfs.patch
+Patch1:		%{name}-CVE.patch
 URL:		http://people.freedesktop.org/~david/polkit-spec.html
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.7
@@ -110,6 +111,7 @@ Statyczne biblioteki PolicyKit.
 %prep
 %setup -q
 %patch0 -p0
+%patch1 -p1
 
 %build
 %{__libtoolize}
