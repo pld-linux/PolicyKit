@@ -2,14 +2,12 @@
 Summary:	A framework for defining policy for system-wide components
 Summary(pl.UTF-8):	Szkielet do definiowania polityki dla komponentów systemowych
 Name:		PolicyKit
-Version:	0.7
-Release:	3
+Version:	0.8
+Release:	1
 License:	MIT
 Group:		Libraries
 Source0:	http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	99e0cc588310656fa25f8f66a411c71f
-Patch0:		%{name}-xfs.patch
-Patch1:		%{name}-CVE.patch
+# Source0-md5:	5c1a4445dbd5cb853132766c5d0ab336
 URL:		http://people.freedesktop.org/~david/polkit-spec.html
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.7
@@ -110,8 +108,6 @@ Statyczne biblioteki PolicyKit.
 
 %prep
 %setup -q
-%patch0 -p0
-%patch1 -p1
 
 %build
 %{__libtoolize}
@@ -123,12 +119,12 @@ Statyczne biblioteki PolicyKit.
 	--with-html-dir=%{_gtkdocdir} \
 	--with-pam-include=system-auth \
 	--with-pam-module-dir=/%{_lib}/security
-%{__make} -j1
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} -j1 install \
+%{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/PolicyKit/modules/*.{la,a}
@@ -147,8 +143,8 @@ rm -rf $RPM_BUILD_ROOT
 %post
 umask 022
 touch /var/lib/misc/PolicyKit.reload
-chown root:polkituser /var/lib/misc/PolicyKit.reload
-chmod 664 /var/lib/misc/PolicyKit.reload
+chown polkituser:polkituser /var/lib/misc/PolicyKit.reload
+chmod 775 /var/lib/misc/PolicyKit.reload
 
 %postun
 if [ "$1" = "0" ]; then
@@ -171,8 +167,9 @@ fi
 %attr(2755,root,polkituser) %{_libexecdir}/polkit-grant-helper
 %attr(4754,root,polkituser) %{_libexecdir}/polkit-grant-helper-pam
 %attr(2755,root,polkituser) %{_libexecdir}/polkit-read-auth-helper
+%attr(4755,root,polkituser) %{_libexecdir}/polkit-resolve-exe-helper
 %attr(2755,root,polkituser) %{_libexecdir}/polkit-revoke-helper
-%attr(2755,root,polkituser) %{_libexecdir}/polkit-set-default-helper
+%attr(4755,polkituser,root) %{_libexecdir}/polkit-set-default-helper
 %attr(755,root,root) %{_libexecdir}/polkitd
 %dir %{_sysconfdir}/PolicyKit
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/PolicyKit/PolicyKit.conf
@@ -181,9 +178,9 @@ fi
 %{_datadir}/PolicyKit
 %{_datadir}/dbus-1/interfaces/org.freedesktop.PolicyKit.AuthenticationAgent.xml
 %{_datadir}/dbus-1/system-services/org.freedesktop.PolicyKit.service
-%attr(664,root,polkituser) %ghost /var/lib/misc/PolicyKit.reload
+%attr(775,polkituser,polkituser) %ghost /var/lib/misc/PolicyKit.reload
 %attr(770,root,polkituser) /var/lib/PolicyKit
-%attr(775,root,polkituser) /var/lib/PolicyKit-public
+%attr(755,polkituser,root) /var/lib/PolicyKit-public
 %attr(770,root,polkituser) /var/run/PolicyKit
 %{_mandir}/man1/polkit-action.1*
 %{_mandir}/man1/polkit-auth.1*
