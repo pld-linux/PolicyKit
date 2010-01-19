@@ -8,7 +8,7 @@ License:	MIT
 Group:		Libraries
 Source0:	http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
 # Source0-md5:	802fd13ae41f73d79359e5ecb0a98716
-URL:		http://people.freedesktop.org/~david/polkit-spec.html
+URL:		http://www.freedesktop.org/wiki/Software/PolicyKit
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.7
 BuildRequires:	dbus-devel >= 1.0
